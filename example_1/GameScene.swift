@@ -8,81 +8,126 @@
 import SpriteKit
 import GameplayKit
 
+struct PhysicsCatagory {
+    static let monster : UInt32 = 0x1 << 1
+    static let Ground : UInt32 = 0x1 << 2
+    static let Wall : UInt32 = 0x1 << 3
+}
+
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var bluebox = SKSpriteNode()
+    var firstcat = SKSpriteNode()
+    var button: SKNode! = nil
+    var currentMoney = "Seviye 1"
+    var settext = "Başardın"
+    var textbox:SKLabelNode!
+    var cathome = SKSpriteNode()
+    
     
     override func didMove(to view: SKView) {
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+        self.backgroundColor = SKColor.red;
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        // when I click the screen then music is gonna play!
+        let backgroundMusic = SKAudioNode(fileNamed: "driveforever.mp3")
+        backgroundMusic.autoplayLooped = true
+        addChild(backgroundMusic)
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
+        
+        
+        
+        
+        // it is gonna set the label which is as I wanted
+                
+                textbox = SKLabelNode(fontNamed:"Chalkduster")
+                textbox.text = String(currentMoney)
+                textbox.fontSize = 25
+                textbox.position = CGPoint(x: 0, y: 150)
+       
+               
+        
+        
+        // code of first cat
+        self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        firstcat = SKSpriteNode(imageNamed: "player_cat")
+        firstcat.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        firstcat.size = CGSize(width: 80, height: 65)
+        firstcat.zPosition = 1;
+        
+        print("x:\(firstcat.position.x), y:\(firstcat.position.y)")
+       
+        // code's of cat home
+        
+        cathome = SKSpriteNode(imageNamed: "cat_home")
+        cathome.size = CGSize(width: 150, height: 200)
+        cathome.position = CGPoint(x: 5, y: 10)
+        
+      
+        // code of blue box
+       // self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+       // bluebox = SKSpriteNode(color: UIColor.cyan, size: CGSize(width: 50, height: 30))
+       // bluebox.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+       // bluebox.position = CGPoint(x: 0.5, y: 0.5)
     
+       // print("x:\(bluebox.position.x), y:\(bluebox.position.y)")
+        
+        
+       // self.addChild(bluebox)
+        self.addChild(textbox)
+        self.addChild(cathome)
+        self.addChild(firstcat)
     
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
+                // it changes to the other page
+               //let sceneTwo = Scenetwo(fileNamed: "Scenetwo")
+              //sceneTwo?.scaleMode = .aspectFill
+             // self.view?.presentScene(sceneTwo!, transition: SKTransition.fade(withDuration: 1))
+        
+      
+        
+            // it is the red button of center
+              button = SKSpriteNode(color: SKColor.black, size: CGSize(width: 80, height: 65))
+              button.position = CGPoint(x: 0, y: -150);
+              self.addChild(button)
+                
+                
+           //this code show us where we click on the swift
+          //if let touch = touches.first {
+         //let location = touch.location(in: self)
+        //print(location)
+       // }
+        
+           }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+        for touch in touches {
+            
+            let location = touch.location(in: self)
+            firstcat.position.x = location.x
+            firstcat.position.y = location.y
+            // when we on it then if statement gonna work like ;..,,
+            if firstcat.position.x == 3.333327293395996 && firstcat.position.y == 60.33334732055664{
+                let sceneTwo = Scenetwo(fileNamed: "Scenetwo")
+                sceneTwo?.scaleMode = .aspectFill
+               self.view?.presentScene(sceneTwo!, transition: SKTransition.fade(withDuration: 1))
+                
+              textbox.text = String(settext)
+              print("You are Done!");
+                 
+            }
+         // it'll write x and y on the screen
+            print("x:\(firstcat.position.x ), y:\(firstcat.position.y)")
+            print("x:\(button.position.x ), y:\(button.position.y)")
+        }
+    }
+   
+    
+
+    // end of the story brother
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-    }
-}
+
